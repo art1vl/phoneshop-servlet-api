@@ -12,6 +12,7 @@
       <input name="query" value="${param.query}">
       <button>Search</button>
   </form>
+    <div class="mainTable">
   <table>
     <thead>
       <tr>
@@ -42,4 +43,5 @@
       </tr>
     </c:forEach>
   </table>
+    </div>
 </tags:master>

@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.DateAndPriceBean;
+import com.es.phoneshop.model.product.PriceHistory;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SampleDataListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        if("true".equals(servletContextEvent.getServletContext().getInitParameter("insertSampleData"))) {
+        if(Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertSampleData"))) {
             ProductDao productDao = ArrayListProductDao.getInstance();
             fillProductList().forEach(productDao::save);
         }
@@ -59,13 +59,13 @@ public class SampleDataListener implements ServletContextListener {
         return startProducts;
     }
 
-    private ArrayList<DateAndPriceBean> startPriceHistory(BigDecimal price) {
-        ArrayList<DateAndPriceBean> list = new ArrayList<>();
+    private List<PriceHistory> startPriceHistory(BigDecimal price) {
+        List<PriceHistory> list = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
-        list.add(new DateAndPriceBean("10.01.2019", new BigDecimal(200), usd));
-        list.add(new DateAndPriceBean("20.03.2019", new BigDecimal(250), usd));
-        list.add(new DateAndPriceBean("15.05.2019", new BigDecimal(300), usd));
-        list.add(new DateAndPriceBean("23.06.2019", price, usd));
+        list.add(new PriceHistory("10.01.2019", new BigDecimal(200), usd));
+        list.add(new PriceHistory("20.03.2019", new BigDecimal(250), usd));
+        list.add(new PriceHistory("15.05.2019", new BigDecimal(300), usd));
+        list.add(new PriceHistory("23.06.2019", price, usd));
         return list;
     }
 }

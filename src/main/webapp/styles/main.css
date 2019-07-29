@@ -12,11 +12,11 @@ header img {
   max-width: 64px;
 }
 
-table {
+.mainTable table {
   border-collapse: collapse;
   border : 1px solid gray;
 }
-td {
+.mainTable td {
   padding: 10px;
   border : 1px solid gray;
   vertical-align: top;
@@ -28,7 +28,44 @@ img.product-tile {
   max-width: 64px;
 }
 
-/* Page specific styles */
+.error {
+  color: red;
+}
+
+.added {
+  color: green;
+}
+
+.basket {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.recentlyViewedTable h3{
+  margin: 0px;
+  padding-left: 20px;
+}
+
+.recentlyViewedTable table{
+  border: 1px solid white;
+  border-spacing: 8px;
+  padding-top: 0px;
+  margin: 0px;
+  vertical-align: top;
+}
+
+/*.recentlyViewedTable thead {*/
+  /*border: 1px solid white;*/
+/*}*/
+
+.recentlyViewedTable td {
+  border : 1px solid gray;
+  width: 75px;
+  vertical-align: top;
+}
+
+  /* Page specific styles */
 body.product-list {
 
 }

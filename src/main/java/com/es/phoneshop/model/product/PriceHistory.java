@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public class DateAndPriceBean implements Serializable {
+public class PriceHistory implements Serializable {
     private String date;
     private BigDecimal price;
     private Currency currency;
 
-    public DateAndPriceBean() {}
+    public PriceHistory() {}
 
-    public DateAndPriceBean(String date, BigDecimal price, Currency currency) {
+    public PriceHistory(String date, BigDecimal price, Currency currency) {
         this.date = date;
         this.price = price;
         this.currency = currency;

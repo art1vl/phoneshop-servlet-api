@@ -3,6 +3,7 @@ package com.es.phoneshop.model.product;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.List;
 import java.util.Objects;
 
 public class Product {
@@ -15,13 +16,13 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private ArrayList<DateAndPriceBean> priceHistory;
+    private List<PriceHistory> priceHistory;
 
     public Product() {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl,
-    ArrayList<DateAndPriceBean> priceHistory) {
+    List<PriceHistory> priceHistory) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -29,7 +30,7 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
-        this.priceHistory = priceHistory;
+        this.priceHistory = new ArrayList<>(priceHistory);//normal clone make
     }
 
     @Override
@@ -44,7 +45,7 @@ public class Product {
         if (o == null || getClass() != o.getClass())
             return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        return (id != null && id.equals(product.id));
     }
 
     @Override
@@ -108,11 +109,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public ArrayList<DateAndPriceBean> getPriceHistory() {
+    public List<PriceHistory> getPriceHistory() {
         return priceHistory;
     }
 
-    public void setPriceHistory(ArrayList<DateAndPriceBean> priceHistory) {
+    public void setPriceHistory(ArrayList<PriceHistory> priceHistory) {
         this.priceHistory = priceHistory;
     }
 }
