@@ -24,18 +24,20 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
 
-    private ProductListPageServlet servlet = new ProductListPageServlet();
+    private ProductListPageServlet servlet;
 
     @Before
     public void setup(){
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        servlet = new ProductListPageServlet();
         servlet.init();
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
-        verify(request, times(1)).setAttribute(anyString(), anyList());
+
+        verify(request).setAttribute(eq("products"), anyList());
         verify(requestDispatcher).forward(request, response);
     }
 }
