@@ -37,6 +37,8 @@ public class ProductListPageServletTest {
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
 
+        verify(request).setAttribute(eq("recentlyViewed"), anyList());
+        verify(request).setAttribute(eq("cart"), anyLong());
         verify(request).setAttribute(eq("products"), anyList());
         verify(requestDispatcher).forward(request, response);
     }

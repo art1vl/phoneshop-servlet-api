@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
     private static ArrayListProductDao instance;
+
     private List<Product> products;
 
     private ArrayListProductDao() {
@@ -20,26 +21,30 @@ public class ArrayListProductDao implements ProductDao {
         return instance;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws NullPointerException
+     * @throws ProductNotFoundException
+     */
     @Override
-    public Product getProduct(Long id) throws NullPointerException, ProductNotFoundException {
-        if (id == null)
-            throw new NullPointerException("null id in getProduct()");
-        return products.stream()
+    public Product getProduct(Long id) throws ProductNotFoundException {
+        if (id == null) {
+            throw new NullPointerException("id should not be null");
+        }
+        Product foundProduct = products.stream()
                 .filter(p -> p.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException(id));
+                .orElseThrow(() -> new ProductNotFoundException(id)).clone();
+        return foundProduct;
     }
 
     @Override
-    public List<Product> findProducts(String sort, String order, String query) {
-        List<Product> cloneProducts = products.stream()
-                                        .filter(p -> p.getPrice().signum() == 1 && p.getStock() > 0)
-                                        .collect(Collectors.toList());
-        if (query != null && !query.equals(""))
-            cloneProducts = findProductsAccordingQuery(query, cloneProducts);
-        if (sort != null)
-            cloneProducts = productsSorting(sort, order, cloneProducts);
-        return cloneProducts;
+    public List<Product> findProducts() {
+        return products.stream()
+                        .filter(p -> p.getPrice().signum() == 1 && p.getStock() > 0)
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -49,61 +54,19 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public void delete(Long id) throws NullPointerException{
+    synchronized public void delete(Long id) throws NullPointerException{
         if (id == null)
-            throw new NullPointerException("null id in delete()");
+            throw new NullPointerException("id should not be null");
         products.removeIf(p -> p.getId().equals(id));
     }
 
-    private List<Product> findProductsAccordingQuery (String query, List<Product> cloneProducts) {
-        Set<Product> finalSet = new LinkedHashSet<>(cloneProducts.stream()
-                                                    .filter((o) -> o.getDescription().toLowerCase().contains(query.toLowerCase()))
-                                                    .collect(Collectors.toSet()));
-        String[] arrayOfWordsFromQuery = query.split(" ");
-        Set<Product> temporarySet = new HashSet<>();
-        for (String word: arrayOfWordsFromQuery){
-            temporarySet.clear();
-            temporarySet = cloneProducts.stream()
-                                    .filter((o) -> o.getDescription().toLowerCase().contains(word.toLowerCase()))
-                                    .collect(Collectors.toSet());
-            for (Product product: temporarySet)
-                finalSet.add(product);
-        }
-        List<Product> finalList = new ArrayList<>(finalSet);
-        return finalList;
-
+    public List<Product> productsSorting (Comparator<Product> comparator, List<Product> cloneProducts) {
+        return cloneProducts.stream()
+                            .sorted(comparator)
+                            .collect(Collectors.toList());
     }
 
-    private List<Product> productsSorting (String sort, String order, List<Product> cloneProducts) {
-        switch (sort){
-            case "description":
-                switch (order){
-                    case "asc":
-                        cloneProducts = cloneProducts.stream()
-                                   .sorted(Comparator.comparing(Product::getDescription))
-                                   .collect(Collectors.toList());
-                        return cloneProducts;
-                    case "desc":
-                        cloneProducts = cloneProducts.stream()
-                                   .sorted(Comparator.comparing(Product::getDescription)
-                                   .reversed())
-                                   .collect(Collectors.toList());
-                        return cloneProducts;
-                }
-            case "price":
-                switch (order){
-                    case "asc":
-                        cloneProducts = cloneProducts.stream()
-                                   .sorted((o1, o2) -> o1.getPrice().subtract(o2.getPrice()).intValue())
-                                   .collect(Collectors.toList());
-                        return cloneProducts;
-                    case "desc":
-                        cloneProducts = cloneProducts.stream()
-                                   .sorted((o1, o2) -> o2.getPrice().subtract(o1.getPrice()).intValue())
-                                   .collect(Collectors.toList());
-                        return cloneProducts;
-                }
-        }
-        return cloneProducts;
+    public void cleanAllBase() {
+        products.removeAll(products);
     }
 }
