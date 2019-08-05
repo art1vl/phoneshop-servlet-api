@@ -12,12 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Deque;
-import java.util.Locale;
 
-public class ProductDetailsPageServlet extends HttpServlet {
+public class CartPageServlet extends HttpServlet {
+    private final String ERROR = "errors";
     private ProductService productService;
     private CartService cartService;
     private RecentlyViewed recentlyViewedService;
@@ -36,22 +34,21 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Deque deque = recentlyViewedService.getQueue(request);
         try {
             request.setAttribute("recentlyViewed", deque);
-            recentlyViewedService.refreshList(request, productService.getProduct(parseProductId(request)));
-            request.setAttribute("totalCost", cart.getTotalCost());
             request.setAttribute("totalQuantity", cart.getTotalQuantity());
-            request.setAttribute("product", productService.getProduct(parseProductId(request)));
-            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp")
+            request.setAttribute("cart", cart);
+            request.setAttribute("flagDoNotShowBasket", true);
+            request.getRequestDispatcher("/WEB-INF/pages/cart.jsp")
                     .forward(request, response);
         }
         catch (NumberFormatException nfe){
             request.setAttribute("id", request.getPathInfo().substring(1));
-            request.setAttribute("flagDoNotShowBasket", true);
+            request.setAttribute("flagForException", true);
             request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp")
                     .forward(request, response);
         }
         catch (ProductNotFoundException pnfe){
             request.setAttribute("id", parseProductId(request));
-            request.setAttribute("flagDoNotShowBasket", true);
+            request.setAttribute("flagForException", true);
             request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp")
                     .forward(request, response);
         }
@@ -60,24 +57,36 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Locale locale = request.getLocale();
-            Long quantity = NumberFormat.getInstance(locale).parse(request.getParameter("quantity")).longValue();
-            Product product = productService.getProduct(parseProductId(request));
+        String[] productIds = request.getParameterValues("productId");
+        String[] quantities = request.getParameterValues("quantity");
 
-            cartService.add(request, product.getId(), quantity);
+        boolean hasError = false;
+        String[] errors = new String[quantities.length];
+        for (int i = 0; i < productIds.length; i++) {
+            Long quantity;
+            try {
+                quantity = Long.valueOf(quantities[i]);
+            } catch (NumberFormatException nfe) {
+                errors[i] = "Not a number";
+                hasError = true;
+                continue;
+            }
+            try {
+                cartService.update(request, Long.valueOf(productIds[i]), quantity);
+            } catch (OutOfStockException exception) {
+                errors[i] = exception.getMessage();
+                hasError = true;
+                continue;
+            }
+        }
 
-            response.sendRedirect(request.getContextPath() + request.getServletPath() + request.getPathInfo()
-            + "?message=Added to cart successfully");
-            return;
+        if (hasError) {
+            request.setAttribute(ERROR, errors);
+            doGet(request, response);
         }
-        catch (ParseException pe){
-            request.setAttribute("error", "Not a number");
+        else {
+            response.sendRedirect(request.getRequestURI() + "?message=Updated successfully");
         }
-        catch (OutOfStockException ose) {
-            request.setAttribute("error", ose.getMessage());
-        }
-        doGet(request, response);
     }
 
     private Long parseProductId(HttpServletRequest request) throws NumberFormatException{

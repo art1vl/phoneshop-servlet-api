@@ -8,6 +8,8 @@ import com.es.phoneshop.model.product.ProductDao;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
@@ -16,9 +18,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SampleDataListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        if(Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertSampleData"))) {
-            ProductDao productDao = ArrayListProductDao.getInstance();
-            fillProductList().forEach(productDao::save);
+        try {
+            if (Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertSampleData"))) {
+                ProductDao productDao = ArrayListProductDao.getInstance();
+                fillProductList().forEach(productDao::save);
+            }
+        }
+        catch (ParseException exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -27,7 +34,7 @@ public class SampleDataListener implements ServletContextListener {
 
     }
 
-    private List<Product> fillProductList() {
+    private List<Product> fillProductList() throws ParseException{
         List<Product> startProducts = new CopyOnWriteArrayList<>();
         Currency usd = Currency.getInstance("USD");
         startProducts.add(new Product(1L, "sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg",
@@ -59,13 +66,14 @@ public class SampleDataListener implements ServletContextListener {
         return startProducts;
     }
 
-    private List<PriceHistory> startPriceHistory(BigDecimal price) {
+    private List<PriceHistory> startPriceHistory(BigDecimal price) throws ParseException {
         List<PriceHistory> list = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
-        list.add(new PriceHistory("10.01.2019", new BigDecimal(200), usd));
-        list.add(new PriceHistory("20.03.2019", new BigDecimal(250), usd));
-        list.add(new PriceHistory("15.05.2019", new BigDecimal(300), usd));
-        list.add(new PriceHistory("23.06.2019", price, usd));
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        list.add(new PriceHistory(format.parse("10.01.2019"), new BigDecimal(200), usd));
+        list.add(new PriceHistory(format.parse("20.03.2019"), new BigDecimal(250), usd));
+        list.add(new PriceHistory(format.parse("15.05.2019"), new BigDecimal(300), usd));
+        list.add(new PriceHistory(format.parse("23.06.2019"), price, usd));
         return list;
     }
 }

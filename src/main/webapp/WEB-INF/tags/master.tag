@@ -14,33 +14,19 @@
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
+    <c:if test="${empty flagDoNotShowBasket}">
     <div class="basket">
-    <img src="http://cdn.onlinewebfonts.com/svg/img_519120.png">:</a>
-    ${cart}
+      <a href="<c:url value="/cart"/>">
+        <img src="http://cdn.onlinewebfonts.com/svg/img_519120.png">
+          <c:if test="${totalQuantity != 0}">
+            :${totalQuantity}|${totalCost} USD
+          </c:if>
+      </a>
     </div>
+    </c:if>
   </header>
   <main>
     <jsp:doBody/>
   </main>
-  <footer>
-    <c:if test="${not empty recentlyViewed}">
-      <div class="recentlyViewedTable">
-        <h3>
-          <strong>Recently viewed:</strong>
-        </h3>
-    <table>
-      <tr>
-        <c:forEach var="product" items="${recentlyViewed}">
-        <td align="center">
-          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}"><br>
-          <a href="<c:url value="/products/${product.id}"/>">${product.description}</a><br>
-            ${product.price}$
-        </td>
-        </c:forEach>
-      </tr>
-    </table>
-      </div>
-    </c:if>
-  </footer>
 </body>
 </html>

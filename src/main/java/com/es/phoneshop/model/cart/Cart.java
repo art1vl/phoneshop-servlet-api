@@ -1,28 +1,38 @@
 package com.es.phoneshop.model.cart;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Cart {
+public class Cart implements Serializable {
     private List<CartItem> cartItems;
     private BigDecimal totalCost;
     private Long totalQuantity;
-    private Long productQuantity;
 
     public Cart() {
-        cartItems = new ArrayList<>();
+        cartItems = new CopyOnWriteArrayList<>();
         totalCost = new BigDecimal(0);
         totalQuantity = 0L;
-        productQuantity = 0L;
     }
 
-    public Long getProductQuantity() {
-        return productQuantity;
+    public Cart(List<CartItem> cartItems, BigDecimal totalCost, Long totalQuantity) {
+        this.cartItems = cartItems;
+        this.totalCost = totalCost;
+        this.totalQuantity = totalQuantity;
     }
 
-    public void setProductQuantity(Long productQuantity) {
-        this.productQuantity = productQuantity;
+    @Override
+    protected Cart clone() {
+        return new Cart(this.cartItems, this.totalCost, this.totalQuantity);
+    }
+
+    public Long getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(Long totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
     public List<CartItem> getCartItems() {
@@ -33,10 +43,6 @@ public class Cart {
         return totalCost;
     }
 
-    public Long getTotalQuantity() {
-        return totalQuantity;
-    }
-
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
@@ -45,7 +51,4 @@ public class Cart {
         this.totalCost = totalCost;
     }
 
-    public void setTotalQuantity(Long totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
 }

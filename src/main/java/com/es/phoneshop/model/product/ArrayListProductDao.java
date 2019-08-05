@@ -2,6 +2,7 @@ package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.exception.ProductNotFoundException;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class ArrayListProductDao implements ProductDao {
         Product foundProduct = products.stream()
                 .filter(p -> p.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException(id)).clone();
+                .orElseThrow(() -> new ProductNotFoundException(id, "the wrong id: ")).customerClone();
         return foundProduct;
     }
 
@@ -67,6 +68,6 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     public void cleanAllBase() {
-        products.removeAll(products);
+        products.clear();
     }
 }
