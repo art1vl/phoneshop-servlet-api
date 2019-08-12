@@ -20,7 +20,7 @@
         <c:forEach var="dateAndPrice" items="${product.priceHistory}">
             <tr>
                 <td>
-                    ${dateAndPrice.stringDate}
+                    <fmt:formatDate type = "date" value = "${dateAndPrice.date}"/>
                 </td>
                 <td>
                     <fmt:formatNumber value="${dateAndPrice.price}" type="currency" currencySymbol="${dateAndPrice.currency.symbol}"/>
@@ -29,5 +29,5 @@
         </c:forEach>
     </table>
     </div>
-    <tags:recentlyViewed></tags:recentlyViewed>
+    <jsp:include page="/listOfRecentlyViewedProducts"/>
 </tags:master>

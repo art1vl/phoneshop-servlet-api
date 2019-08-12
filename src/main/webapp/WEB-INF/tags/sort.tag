@@ -6,6 +6,6 @@
 <%@ attribute name="url" required="true" %>
 
 
-<a href="<c:url value="/products?query=${param.query}&sort=${sort}&order=${order}"/>">
+<a href="<c:url value="/products?query=${query}&sort=${sort}&order=${order}"/>">
     <img src="${url}" width="15" height="15">
 </a>

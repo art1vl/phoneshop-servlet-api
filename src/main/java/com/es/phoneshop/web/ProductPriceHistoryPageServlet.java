@@ -1,10 +1,8 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.HttpSessionCartService;
-import com.es.phoneshop.model.product.HttpSessionProductService;
-import com.es.phoneshop.model.product.ProductService;
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.service.product.DefaultProductService;
+import com.es.phoneshop.service.product.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,19 +12,14 @@ import java.io.IOException;
 
 public class ProductPriceHistoryPageServlet extends HttpServlet {
     private ProductService productService;
-    private CartService cartService;
 
     @Override
-    public void init(){
-        productService = HttpSessionProductService.getInstance();
-        cartService = HttpSessionCartService.getInstance();
+    public void init() {
+        productService = DefaultProductService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cart cart = cartService.getCart(request);
-        request.setAttribute("totalCost", cart.getTotalCost());
-        request.setAttribute("totalQuantity", cart.getTotalQuantity());
         try {
             Long idFromPath = parseProductId(request);
             request.setAttribute("product", productService.getProduct(idFromPath));
@@ -34,7 +27,14 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
         }
         catch (NumberFormatException nfe){
             request.setAttribute("id", request.getPathInfo().substring(1));
+            request.setAttribute("doNotShowMiniCart", true);
             request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);
+        }
+        catch (ProductNotFoundException pnfe){
+            request.setAttribute("id", parseProductId(request));
+            request.setAttribute("doNotShowMiniCart", true);
+            request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp")
+                    .forward(request, response);
         }
     }
 

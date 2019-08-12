@@ -1,6 +1,7 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ public interface ProductService {
     Product getProduct(Long id) throws ProductNotFoundException;
     void save(Product product);
     void delete(Long id);
+    void changeProductStock(Long id, int newStock);
 }

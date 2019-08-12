@@ -1,4 +1,6 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.service.product;
+
+import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,8 +30,8 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewed {
     @Override
     public void refreshList(HttpServletRequest request, Product product) {
         HttpSession session = request.getSession();
-        synchronized (session) {
-            Deque<Product> queue = (Deque<Product>) session.getAttribute(ATTRIBUTE);
+        Deque<Product> queue = (Deque<Product>) session.getAttribute(ATTRIBUTE);
+        synchronized (queue) {
             queue.remove(product);
             int maxAmountInTheQueue = 3;
             if (queue.size() < maxAmountInTheQueue) {

@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 
 public final class CartItem implements Serializable {
     private Product product;
-    private Long quantity;
+    private int quantity;
     private BigDecimal totalCost;
 
     public CartItem() {}
 
-    public CartItem(Product product, Long quantity) {
+    public CartItem(Product product, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("quantity should be a positive number");
         }
@@ -25,16 +25,11 @@ public final class CartItem implements Serializable {
         return product;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
     public BigDecimal getTotalCost() {
         return totalCost;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this.product.equals(o);
     }
 }

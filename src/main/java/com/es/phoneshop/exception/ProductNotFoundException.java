@@ -1,6 +1,6 @@
 package com.es.phoneshop.exception;
 
-public class ProductNotFoundException extends RuntimeException {//add mess
+public class ProductNotFoundException extends RuntimeException {
     private Long productId;
     private String message;
 
@@ -15,6 +15,6 @@ public class ProductNotFoundException extends RuntimeException {//add mess
 
     @Override
     public String getMessage() {
-        return message;
+        return message + productId;
     }
 }

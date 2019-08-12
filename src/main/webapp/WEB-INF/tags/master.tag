@@ -14,15 +14,8 @@
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
-    <c:if test="${empty flagDoNotShowBasket}">
-    <div class="basket">
-      <a href="<c:url value="/cart"/>">
-        <img src="http://cdn.onlinewebfonts.com/svg/img_519120.png">
-          <c:if test="${totalQuantity != 0}">
-            :${totalQuantity}|${totalCost} USD
-          </c:if>
-      </a>
-    </div>
+    <c:if test="${empty doNotShowMiniCart}">
+      <jsp:include page="/miniCart"/>
     </c:if>
   </header>
   <main>

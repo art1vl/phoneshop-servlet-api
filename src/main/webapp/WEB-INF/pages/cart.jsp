@@ -69,10 +69,19 @@
                         </td>
                     </tr>
                 </c:forEach>
+                <tr style="background-color: bisque">
+                    <td colspan="2" style="text-align: left">Subtotal:</td>
+                    <td style="text-align: right">${cart.totalQuantity}</td>
+                    <td colspan="3" class="price">
+                        <fmt:formatNumber value="${cart.subCost}"
+                                          type="currency" currencySymbol="${cart.cartItems[0].product.currency.symbol}"/>
+                    </td>
+                </tr>
             </table>
             <br><button>Update</button>
+            <input type="button" value="Checkout" onclick='location.href="<c:url value="/checkout"/>"' >
         </form>
     </div>
-    <tags:recentlyViewed></tags:recentlyViewed>
+    <jsp:include page="/listOfRecentlyViewedProducts"/>
     </c:if>
 </tags:master>
