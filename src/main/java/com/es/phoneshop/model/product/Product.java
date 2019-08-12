@@ -1,12 +1,13 @@
 package com.es.phoneshop.model.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Objects;
 
-public class Product {
+public class Product implements Serializable {
     private Long id;
     private String code;
     private String description;
@@ -18,8 +19,7 @@ public class Product {
     private String imageUrl;
     private List<PriceHistory> priceHistory;
 
-    public Product() {
-    }
+    public Product() { }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl,
     List<PriceHistory> priceHistory) {
@@ -30,11 +30,13 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
-        this.priceHistory = new ArrayList<>(priceHistory);//normal clone make
+        this.priceHistory = new ArrayList<>();
+        for (PriceHistory item: priceHistory) {
+            this.priceHistory.add(item.clone());
+        }
     }
 
-    @Override
-    public Product clone()  {
+    public Product customerClone() {
         return new Product(this.id, this.code, this.description, this.price, this.currency, this.stock, this.imageUrl, this.priceHistory);
     }
 
@@ -113,7 +115,7 @@ public class Product {
         return priceHistory;
     }
 
-    public void setPriceHistory(ArrayList<PriceHistory> priceHistory) {
+    public void setPriceHistory(List<PriceHistory> priceHistory) {
         this.priceHistory = priceHistory;
     }
 }

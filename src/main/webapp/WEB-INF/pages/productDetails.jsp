@@ -4,7 +4,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
-<tags:master pageTitle="Product price history">
+<tags:master pageTitle="Product Details">
     <p>
         Product details
     </p>
@@ -29,4 +29,5 @@
             <button>Add to card</button>
         </form>
     </div>
+    <tags:recentlyViewed></tags:recentlyViewed>
 </tags:master>

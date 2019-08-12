@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -21,23 +22,22 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewed {
     @Override
     public Deque getQueue(HttpServletRequest request) {
         Deque<Product>  result = (Deque<Product>) request.getSession().getAttribute(ATTRIBUTE);
-        if (result == null){
-            result = new ArrayDeque<>();
-            request.getSession().setAttribute(ATTRIBUTE, result);
-        }
-        return result;
+        return new ArrayDeque(result);
     }
 
     @Override
-    public Deque refreshList(Deque queue, Product product) {
-        queue.remove(product);
-        if (queue.size() < 3){
-            queue.addFirst(product);
+    public void refreshList(HttpServletRequest request, Product product) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            Deque<Product> queue = (Deque<Product>) session.getAttribute(ATTRIBUTE);
+            queue.remove(product);
+            int maxAmountInTheQueue = 3;
+            if (queue.size() < maxAmountInTheQueue) {
+                queue.addFirst(product);
+            } else {
+                queue.pollLast();
+                queue.addFirst(product);
+            }
         }
-        else{
-            queue.pollLast();
-            queue.addFirst(product);
-        }
-        return queue;
     }
 }

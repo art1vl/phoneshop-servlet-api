@@ -11,9 +11,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class HttpSessionDaoServiceTest {
+public class HttpSessionProductServiceTest {
     private ProductDao productDao;
-    private HttpSessionDaoService daoService;
+    private HttpSessionProductService daoService;
 
     private ArrayList<PriceHistory> startPriceHistory(BigDecimal price) {
         ArrayList<PriceHistory> list = new ArrayList<>();
@@ -26,7 +26,7 @@ public class HttpSessionDaoServiceTest {
 
     @Before
     public void setup() {
-        daoService = HttpSessionDaoService.getInstance();
+        daoService = HttpSessionProductService.getInstance();
         productDao = ArrayListProductDao.getInstance();
         ((ArrayListProductDao) productDao).cleanAllBase();
     }
@@ -36,7 +36,7 @@ public class HttpSessionDaoServiceTest {
         Product testProduct = new Product(10000L, "sgs", "ZZZZ", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
-        List<Product> filteredList = daoService.handler("description", "desc", null);
+        List<Product> filteredList = daoService.findAndSortProducts("description", "desc", null);
 
         assertNotNull(filteredList);
         assertEquals(filteredList.get(0), testProduct);
@@ -54,7 +54,7 @@ public class HttpSessionDaoServiceTest {
         Product testProduct = new Product(10000L, "sgs", "aaaaaaa", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
-        List<Product> filteredList = daoService.handler("description", "asc", null);
+        List<Product> filteredList = daoService.findAndSortProducts("description", "asc", null);
 
         assertNotNull(filteredList);
         assertEquals(filteredList.get(0), testProduct);
@@ -72,7 +72,7 @@ public class HttpSessionDaoServiceTest {
         Product testProduct = new Product(10000L, "sgs", "aaaa", new BigDecimal(100000), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
-        List<Product> filteredList = daoService.handler("price", "desc", null);
+        List<Product> filteredList = daoService.findAndSortProducts("price", "desc", null);
 
         assertNotNull(filteredList);
         assertEquals(filteredList.get(0), testProduct);
@@ -90,7 +90,7 @@ public class HttpSessionDaoServiceTest {
         Product testProduct = new Product(10000L, "sgs", "aaaa", new BigDecimal(1), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
-        List<Product> filteredList = daoService.handler("price", "asc", null);
+        List<Product> filteredList = daoService.findAndSortProducts("price", "asc", null);
 
         assertNotNull(filteredList);
         assertEquals(filteredList.get(0), testProduct);
@@ -108,7 +108,7 @@ public class HttpSessionDaoServiceTest {
         Product testProduct = new Product(10000L, "sgs", "ZZZZ", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
-        List<Product> filteredList =  daoService.handler(null,null,"ZZZ");
+        List<Product> filteredList =  daoService.findAndSortProducts(null,null,"ZZZ");
 
         assertNotNull(filteredList);
         assertEquals(filteredList.get(0), testProduct);

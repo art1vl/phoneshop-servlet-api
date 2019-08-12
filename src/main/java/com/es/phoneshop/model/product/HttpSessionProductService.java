@@ -1,25 +1,28 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.exception.ProductNotFoundException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class HttpSessionDaoService implements DaoService {
-    private static HttpSessionDaoService instance;
+public class HttpSessionProductService implements ProductService {
+    private static HttpSessionProductService instance;
 
     private ArrayListProductDao arrayListProductDao;
 
-    private HttpSessionDaoService() {}
+    private HttpSessionProductService() {
+        arrayListProductDao = ArrayListProductDao.getInstance();
+    }
 
-    synchronized public static HttpSessionDaoService getInstance() {
+    synchronized public static HttpSessionProductService getInstance() {
         if(instance == null){
-            instance = new HttpSessionDaoService();
+            instance = new HttpSessionProductService();
         }
         return instance;
     }
 
     @Override
-    public List<Product> handler(String sort, String order, String query) {
-        arrayListProductDao = ArrayListProductDao.getInstance();
+    public List<Product> findAndSortProducts(String sort, String order, String query) throws ProductNotFoundException{
         List<Product> cloneProducts = arrayListProductDao.findProducts();
         if (query != null && !query.equals(""))
             cloneProducts = findProductsAccordingQuery(query,cloneProducts);
@@ -72,5 +75,20 @@ public class HttpSessionDaoService implements DaoService {
         }
         List<Product> finalList = new ArrayList<>(finalSet);
         return finalList;
+    }
+
+    @Override
+    public Product getProduct(Long id) throws ProductNotFoundException {
+        return arrayListProductDao.getProduct(id);
+    }
+
+    @Override
+    public void save(Product product) {
+        arrayListProductDao.save(product);
+    }
+
+    @Override
+    public void delete(Long id) {
+        arrayListProductDao.delete(id);
     }
 }

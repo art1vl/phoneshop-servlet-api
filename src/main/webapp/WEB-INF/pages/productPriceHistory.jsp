@@ -4,11 +4,12 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
-<tags:master pageTitle="Product">
+<tags:master pageTitle="Product price history">
     <p>Price history of ${product.description}</p>
     <p>
         <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
     </p>
+    <div class="mainTable">
     <table>
         <thead>
         <tr>
@@ -19,7 +20,7 @@
         <c:forEach var="dateAndPrice" items="${product.priceHistory}">
             <tr>
                 <td>
-                    ${dateAndPrice.date}
+                    ${dateAndPrice.stringDate}
                 </td>
                 <td>
                     <fmt:formatNumber value="${dateAndPrice.price}" type="currency" currencySymbol="${dateAndPrice.currency.symbol}"/>
@@ -27,4 +28,6 @@
             </tr>
         </c:forEach>
     </table>
+    </div>
+    <tags:recentlyViewed></tags:recentlyViewed>
 </tags:master>

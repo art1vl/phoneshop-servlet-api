@@ -1,33 +1,40 @@
 package com.es.phoneshop.model.cart;
 
-public class CartItem {
-    private Long productId;
-    private Long quantity;
+import com.es.phoneshop.model.product.Product;
 
-    public CartItem(Long productId, Long quantity) {
-        if (productId == null) {
-            throw new IllegalArgumentException("productId is required");
-        }
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+public final class CartItem implements Serializable {
+    private Product product;
+    private Long quantity;
+    private BigDecimal totalCost;
+
+    public CartItem() {}
+
+    public CartItem(Product product, Long quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("quantity should be a positive number");
         }
-        this.productId = productId;
+        this.product = product;
         this.quantity = quantity;
+        this.totalCost = product.getPrice().multiply(new BigDecimal(quantity));
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public Long getQuantity() {
         return quantity;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public BigDecimal getTotalCost() {
+        return totalCost;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    @Override
+    public boolean equals(Object o) {
+        return this.product.equals(o);
     }
 }
