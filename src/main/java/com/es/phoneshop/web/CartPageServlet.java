@@ -27,7 +27,7 @@ public class CartPageServlet extends HttpServlet {
 
         request.setAttribute("cart", cart);
         request.setAttribute("doNotShowMiniCart", true);
-
+        
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp")
                 .forward(request, response);
     }

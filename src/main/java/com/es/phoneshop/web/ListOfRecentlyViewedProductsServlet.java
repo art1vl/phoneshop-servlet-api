@@ -26,4 +26,13 @@ public class ListOfRecentlyViewedProductsServlet extends HttpServlet {
 
         request.getRequestDispatcher("/WEB-INF/common/listOfRecentlyViewedProducts.jsp").include(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Deque deque = recentlyViewedService.getQueue(request);
+
+        request.setAttribute("theListOfRecentlyViewedProducts", deque);
+
+        request.getRequestDispatcher("/WEB-INF/common/listOfRecentlyViewedProducts.jsp").include(request, response);
+    }
 }

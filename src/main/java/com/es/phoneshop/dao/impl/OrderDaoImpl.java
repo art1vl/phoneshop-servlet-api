@@ -26,7 +26,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void save(Order order) {
+    synchronized public void save(Order order) {
         order.setId(++id);
         orders.add(order);
     }
@@ -39,6 +39,6 @@ public class OrderDaoImpl implements OrderDao {
         return orders.stream()
                      .filter(o -> o.getSecureId().equals(id))
                      .findAny()
-                     .orElseThrow(() -> new OrderNotFoundException(id, "There is no such order")).customerClone();
+                     .orElseThrow(() -> new OrderNotFoundException(id, "There is no such order")).cloneOrder();
     }
 }

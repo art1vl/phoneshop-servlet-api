@@ -28,14 +28,17 @@ public class StockServiceImpl implements StockService {
             Long productId = item.getProduct().getId();
             Product productFromDao = productService.getProduct(productId);
             int newStock = productFromDao.getStock() - item.getQuantity();
-            if (newStock >= 0) {
-                productService.changeProductStock(productId, newStock);
-            }
-            else {
+            if (newStock < 0) {
                 throw new OutOfStockException(productFromDao.getStock(), "Sorry, but " + productFromDao.getDescription()
                         + " doesn't have enough stock. Please, return to cartPage and select another amount" +
                         " of this product. Now max stock is ");
             }
+        }
+        for (CartItem item: cartItems) {
+            Long productId = item.getProduct().getId();
+            Product productFromDao = productService.getProduct(productId);
+            int newStock = productFromDao.getStock() - item.getQuantity();
+            productService.changeProductStock(productId, newStock);
         }
     }
 }

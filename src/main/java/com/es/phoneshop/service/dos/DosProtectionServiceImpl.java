@@ -2,21 +2,21 @@ package com.es.phoneshop.service.dos;
 
 import com.es.phoneshop.model.dos.SessionDosFilterStructure;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class DosProtectionServiceImpl implements DosProtectionService{
     private static DosProtectionServiceImpl instance;
 
-    private Map<String, SessionDosFilterStructure> countMap;
-    private Long oneMinute;
+    private ConcurrentMap<String, SessionDosFilterStructure> countMap;
     private final Long MAX_AMOUNT_OF_REQUESTS_PER_MINUTE = 20L;
+    private volatile Date lastCleanDate;
+    private final Long FIVE_MINUTES = 300000L;
 
     private DosProtectionServiceImpl() {
-        countMap = Collections.synchronizedMap(new HashMap<>());
-        oneMinute = 60000L;
+        countMap = new ConcurrentHashMap<>();
+        lastCleanDate = new Date();
     }
 
     synchronized public static DosProtectionServiceImpl getInstance() {
@@ -28,15 +28,11 @@ public class DosProtectionServiceImpl implements DosProtectionService{
 
     @Override
     public boolean isAllowed(String ip) {
-        SessionDosFilterStructure item = countMap.get(ip);
-        if(item == null) {
-            item = new SessionDosFilterStructure();
-            countMap.put(ip, item);
+        if (new Date().getTime() - lastCleanDate.getTime() > FIVE_MINUTES) {
+            lastCleanDate = new Date();
+            countMap.clear();
         }
-        if(new Date().getTime() - item.getDate().getTime() > oneMinute) {
-            item.reset();
-        }
-        item.incrementLong();
-        return item.getAmountOfRequests() - MAX_AMOUNT_OF_REQUESTS_PER_MINUTE <= 0;
+        SessionDosFilterStructure item = countMap.computeIfAbsent(ip, (p)->new SessionDosFilterStructure(MAX_AMOUNT_OF_REQUESTS_PER_MINUTE));
+        return item.isAllowed();
     }
 }
