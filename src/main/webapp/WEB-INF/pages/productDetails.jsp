@@ -29,5 +29,5 @@
             <button>Add to card</button>
         </form>
     </div>
-    <tags:recentlyViewed></tags:recentlyViewed>
+    <jsp:include page="/listOfRecentlyViewedProducts"/>
 </tags:master>

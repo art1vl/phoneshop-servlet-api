@@ -44,5 +44,5 @@
         </c:forEach>
         </table>
     </div>
-    <tags:recentlyViewed></tags:recentlyViewed>
+    <jsp:include page="/listOfRecentlyViewedProducts"/>
 </tags:master>

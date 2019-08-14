@@ -10,12 +10,26 @@
       <param-value>true</param-value>
   </context-param>
 
+  <filter>
+    <filter-name>dos</filter-name>
+    <filter-class>com.es.phoneshop.web.filter.DosFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>dos</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <listener>
       <listener-class>com.es.phoneshop.web.SampleDataListener</listener-class>
   </listener>
 
   <listener>
-    <listener-class>com.es.phoneshop.web.CreatingCartAndRecentlyViewedWhenSessionCreatedListener</listener-class>
+    <listener-class>com.es.phoneshop.web.CreateSessionRecentlyViewedEventListener</listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>com.es.phoneshop.web.CreateSessionCartEventListener</listener-class>
   </listener>
 
   <servlet>
@@ -66,6 +80,46 @@
   <servlet-mapping>
     <servlet-name>deleteCartItem</servlet-name>
     <url-pattern>/cart/deleteCartItem/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>miniCart</servlet-name>
+    <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>miniCart</servlet-name>
+    <url-pattern>/miniCart</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>listOfRecentlyViewedProducts</servlet-name>
+    <servlet-class>com.es.phoneshop.web.ListOfRecentlyViewedProductsServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>listOfRecentlyViewedProducts</servlet-name>
+    <url-pattern>/listOfRecentlyViewedProducts</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>checkout</servlet-name>
+    <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>checkout</servlet-name>
+    <url-pattern>/checkout</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>overview</servlet-name>
+    <servlet-class>com.es.phoneshop.web.OverviewPageServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>overview</servlet-name>
+    <url-pattern>/order/overview/*</url-pattern>
   </servlet-mapping>
 
 </web-app>

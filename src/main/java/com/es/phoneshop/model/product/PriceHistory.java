@@ -2,7 +2,6 @@ package com.es.phoneshop.model.product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
 
@@ -10,7 +9,6 @@ public class PriceHistory implements Serializable {
     private Date date;
     private BigDecimal price;
     private Currency currency;
-    private String stringDate;
 
     public PriceHistory() {}
 
@@ -18,8 +16,6 @@ public class PriceHistory implements Serializable {
         this.date = date;
         this.price = price;
         this.currency = currency;
-        SimpleDateFormat ddMmmYyyyFormat = new SimpleDateFormat("dd.MM.yyyy");
-        this.stringDate = ddMmmYyyyFormat.format(date);
     }
 
     @Override
@@ -49,13 +45,5 @@ public class PriceHistory implements Serializable {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
-    }
-
-    public String getStringDate() {
-        return stringDate;
-    }
-
-    public void setStringDate(String stringDate) {
-        this.stringDate = stringDate;
     }
 }

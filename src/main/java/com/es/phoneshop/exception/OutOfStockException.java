@@ -1,6 +1,6 @@
 package com.es.phoneshop.exception;
 
-public class OutOfStockException extends RuntimeException{//add mess
+public class OutOfStockException extends RuntimeException{
     private int maxStock;
     private String message;
 

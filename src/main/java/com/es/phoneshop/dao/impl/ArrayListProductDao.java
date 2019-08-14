@@ -1,8 +1,9 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao.impl;
 
+import com.es.phoneshop.dao.interfaces.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,11 +35,23 @@ public class ArrayListProductDao implements ProductDao {
         if (id == null) {
             throw new NullPointerException("id should not be null");
         }
-        Product foundProduct = products.stream()
+        return products.stream()
                 .filter(p -> p.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException(id, "the wrong id: ")).customerClone();
-        return foundProduct;
+                .orElseThrow(() -> new ProductNotFoundException(id, "the wrong id: "))
+                .customerClone();
+    }
+
+    @Override
+    public void changeProductStock(Long id, int newStock) {
+        if (id == null) {
+            throw new NullPointerException("id should not be null");
+        }
+        Product product = products.stream()
+                                  .filter(p -> p.getId().equals(id))
+                                  .findAny()
+                                  .orElseThrow(() -> new ProductNotFoundException(id, "the wrong id: "));
+        product.setStock(newStock);
     }
 
     @Override
@@ -61,13 +74,15 @@ public class ArrayListProductDao implements ProductDao {
         products.removeIf(p -> p.getId().equals(id));
     }
 
+    @Override
     public List<Product> productsSorting (Comparator<Product> comparator, List<Product> cloneProducts) {
         return cloneProducts.stream()
                             .sorted(comparator)
                             .collect(Collectors.toList());
     }
 
-    public void cleanAllBase() {
+    @Override
+    public void cleanListOfProducts() {
         products.clear();
     }
 }

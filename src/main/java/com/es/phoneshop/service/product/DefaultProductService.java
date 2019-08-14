@@ -1,22 +1,25 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.service.product;
 
+import com.es.phoneshop.dao.interfaces.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class HttpSessionProductService implements ProductService {
-    private static HttpSessionProductService instance;
+public class DefaultProductService implements ProductService {
+    private static DefaultProductService instance;
 
-    private ArrayListProductDao arrayListProductDao;
+    private ProductDao arrayListProductDao;
 
-    private HttpSessionProductService() {
+    private DefaultProductService() {
         arrayListProductDao = ArrayListProductDao.getInstance();
     }
 
-    synchronized public static HttpSessionProductService getInstance() {
+    synchronized public static DefaultProductService getInstance() {
         if(instance == null){
-            instance = new HttpSessionProductService();
+            instance = new DefaultProductService();
         }
         return instance;
     }
@@ -90,5 +93,10 @@ public class HttpSessionProductService implements ProductService {
     @Override
     public void delete(Long id) {
         arrayListProductDao.delete(id);
+    }
+
+    @Override
+    public void changeProductStock(Long id, int newStock) {
+        arrayListProductDao.changeProductStock(id, newStock);
     }
 }

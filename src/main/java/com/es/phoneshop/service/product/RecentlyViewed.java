@@ -1,4 +1,6 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.service.product;
+
+import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Deque;

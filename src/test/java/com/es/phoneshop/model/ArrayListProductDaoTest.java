@@ -1,16 +1,18 @@
 package com.es.phoneshop.model;
 
 import com.es.phoneshop.exception.ProductNotFoundException;
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.PriceHistory;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.dao.interfaces.ProductDao;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
@@ -27,37 +29,38 @@ public class ArrayListProductDaoTest
     @Before
     public void setup() {
         productDao = ArrayListProductDao.getInstance();
-        ((ArrayListProductDao) productDao).cleanAllBase();
+        productDao.cleanListOfProducts();
     }
 
-    private ArrayList<PriceHistory> startPriceHistory(BigDecimal price) {
+    private ArrayList<PriceHistory> startPriceHistory(BigDecimal price) throws ParseException{
         ArrayList<PriceHistory> list = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
-        list.add(new PriceHistory("1.01.2019", new BigDecimal(200), usd));
-        list.add(new PriceHistory("20.03.2019", new BigDecimal(250), usd));
-        list.add(new PriceHistory("23.06.2019", price, usd));
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        list.add(new PriceHistory(format.parse("1.01.2019"), new BigDecimal(200), usd));
+        list.add(new PriceHistory(format.parse("20.03.2019"), new BigDecimal(250), usd));
+        list.add(new PriceHistory(format.parse("23.06.2019"), price, usd));
         return list;
     }
 
     @Test
-    public void listOfFoundProductsIsNotEmpty() {
+    public void listOfFoundProductsIsNotEmpty() throws ParseException {
         assertNotNull(productDao.findProducts());
         Product testProduct = new Product(20L, "sgs", "Samsung Galaxy S", new BigDecimal(100), null, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
 
         productDao.save(testProduct);
 
-        assertTrue(!productDao.findProducts().isEmpty());
+        assertFalse(productDao.findProducts().isEmpty());
     }
 
     @Test
     public void getProductWhichDoesNotExist() throws ProductNotFoundException{
         thrown.expect(ProductNotFoundException.class);
-        thrown.expectMessage("-1");
+        thrown.expectMessage("the wrong id: ");
         productDao.getProduct(-1L);
     }
 
     @Test
-    public void getProductWithCorrectId(){
+    public void getProductWithCorrectId() throws ParseException {
         Product testProduct = new Product(20L, "sgs", "Samsung Galaxy S", new BigDecimal(100), null, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
@@ -74,29 +77,29 @@ public class ArrayListProductDaoTest
     }
 
     @Test
-    public void shouldNotFindProductWithZeroPriceInFilteredList() {
+    public void shouldNotFindProductWithZeroPriceInFilteredList() throws ParseException {
         Product testProduct = new Product(20L, "sgs", "Samsung Galaxy S", new BigDecimal(0), null, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
         List filteredList = productDao.findProducts();
 
         assertNotNull(filteredList);
-        assertTrue(!filteredList.contains(testProduct));
+        assertFalse(filteredList.contains(testProduct));
     }
 
     @Test
-    public void shouldNotFindProductWithZeroCostInFilteredList() {
+    public void shouldNotFindProductWithZeroCostInFilteredList() throws ParseException {
         Product testProduct = new Product(20L, "sgs", "Samsung Galaxy S", new BigDecimal(100), null, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
         List filteredList = productDao.findProducts();
 
         assertNotNull(filteredList);
-        assertTrue(!filteredList.contains(testProduct));
+        assertFalse(filteredList.contains(testProduct));
     }
 
     @Test
-    public void shouldFindProductWhichSatisfyFind() {
+    public void shouldFindProductWhichSatisfyFind() throws ParseException {
         Product testProduct = new Product(20L, "sgs", "Samsung Galaxy S", new BigDecimal(100), null, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
         productDao.save(testProduct);
 
@@ -107,7 +110,7 @@ public class ArrayListProductDaoTest
     }
 
     @Test
-    public void shouldNotFindProductWhichWasDeletedAndThrowProductNotFoundException(){
+    public void shouldNotFindProductWhichWasDeletedAndThrowProductNotFoundException() throws ParseException {
         productDao.save(new Product(10000L, "sgs", "Samsung Galaxy S", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000))));
 
         productDao.delete(10000L);

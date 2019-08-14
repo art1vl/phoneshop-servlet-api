@@ -40,7 +40,7 @@ img.product-tile {
   color: green;
 }
 
-.basket {
+.miniCart {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -63,17 +63,27 @@ img.product-tile {
   vertical-align: top;
 }
 
-/*.recentlyViewedTable thead {*/
-  /*border: 1px solid white;*/
-/*}*/
-
 .recentlyViewedTable td {
   border : 1px solid gray;
   width: 75px;
   vertical-align: top;
 }
 
-  /* Page specific styles */
-body.product-list {
-
+.checkoutTable table{
+  border: 1px solid white;
+  border-spacing: 8px;
+  padding-top: 0px;
+  margin-top: 15px;
+  vertical-align: top;
 }
+
+.checkoutTable td {
+  border : 1px solid white;
+  width: 75px;
+  vertical-align: top;
+}
+
+  /*!* Page specific styles *!*/
+/*body.product-list {*/
+
+/*}*/
