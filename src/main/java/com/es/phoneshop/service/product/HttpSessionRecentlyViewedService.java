@@ -24,7 +24,7 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewed {
     @Override
     public Deque getQueue(HttpServletRequest request) {
         Deque<Product>  result = (Deque<Product>) request.getSession().getAttribute(ATTRIBUTE);
-        return new ArrayDeque(result);
+        return new ArrayDeque<>(result);
     }
 
     @Override

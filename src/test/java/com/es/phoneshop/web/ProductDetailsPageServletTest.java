@@ -15,16 +15,17 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Currency;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
@@ -39,6 +40,7 @@ public class ProductDetailsPageServletTest {
 
     private ProductDetailsPageServlet servlet;
     private ProductService productServ;
+    private HttpSession httpSession;
 
     private ArrayList<PriceHistory> startPriceHistory(BigDecimal price) {
         ArrayList<PriceHistory> list = new ArrayList<>();
@@ -86,17 +88,20 @@ public class ProductDetailsPageServletTest {
         verify(requestDispatcher).forward(request, response);
     }
 
-//    @Test
-//    public void testDoGetForNormalWork() throws ServletException, IOException {
-//        Product testProduct = new Product(10000L, "sgs", "ZZZZ", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
-//        productServ.save(testProduct);
-//        when(request.getPathInfo()).thenReturn("/10000");
-//        Long variable = 10000L;
-//        when(productServ.getProduct(eq(variable))).thenReturn(testProduct);
-//
-//        servlet.doGet(request, response);
-//
-//        verify(request).setAttribute(eq("product"), eq(testProduct));
-//        verify(requestDispatcher).forward(request, response);
-//    }
+    @Test
+    public void testDoGetForNormalWork() throws ServletException, IOException {
+        Product testProduct = new Product(10000L, "sgs", "ZZZZ", new BigDecimal(100), null, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", startPriceHistory(new BigDecimal(2000)));
+        productServ.save(testProduct);
+        when(request.getPathInfo()).thenReturn("/10000");
+        httpSession = mock(HttpSession.class);
+        when(request.getSession()).thenReturn(httpSession);
+        when(httpSession.getAttribute(eq("recentlyViewed"))).thenReturn(new ArrayDeque<>());
+        Long variable = 10000L;
+      //  when(productService.getProduct(eq(variable))).thenReturn(testProduct);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("product"), eq(testProduct));
+        verify(requestDispatcher).forward(request, response);
+    }
 }

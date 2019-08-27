@@ -45,7 +45,7 @@ public class Order extends Cart {
         this.orderCost = orderCost;
     }
 
-    public Order customerClone() {
+    public Order cloneOrder() {
         return new Order(super.getCartItems(), super.getSubCost(), super.getTotalQuantity(), this.id, this.secureId, this.name,
                 this.surname, this.phone, this.deliveryMode, this.deliveryDate, this.deliveryCost, this.address,
                 this.paymentMethod, this.orderCost);

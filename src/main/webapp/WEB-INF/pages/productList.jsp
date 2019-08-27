@@ -8,6 +8,9 @@
   <p>
     Welcome to Expert-Soft training!
   </p>
+    <p>
+        <input type="button" value="Advanced search" onclick='location.href="<c:url value="/advancedSearch"/>"' />
+    </p>
   <form>
       <input name="query" value="${param.query}">
       <button>Search</button>
@@ -18,19 +21,19 @@
                 <tr>
                     <td>Image</td>
                     <td>Description
-                        <tags:sort query="${param.query}" sort="description" order="asc" url="https://image.flaticon.com/icons/png/512/44/44674.png"></tags:sort>
-                        <tags:sort query="${param.query}" sort="description" order="desc" url="https://cdn.pixabay.com/photo/2012/04/28/18/55/arrow-44008_960_720.png"></tags:sort>
+                        <tags:sort query="${param.query}" sort="description" order="asc" url="https://image.flaticon.com/icons/png/512/44/44674.png"/>
+                        <tags:sort query="${param.query}" sort="description" order="desc" url="https://cdn.pixabay.com/photo/2012/04/28/18/55/arrow-44008_960_720.png"/>
                     </td>
                     <td class="price">Price
-                        <tags:sort query="${param.query}" sort="price" order="asc" url="https://image.flaticon.com/icons/png/512/44/44674.png"></tags:sort>
-                        <tags:sort query="${param.query}" sort="price" order="desc" url="https://cdn.pixabay.com/photo/2012/04/28/18/55/arrow-44008_960_720.png"></tags:sort>
+                        <tags:sort query="${param.query}" sort="price" order="asc" url="https://image.flaticon.com/icons/png/512/44/44674.png"/>
+                        <tags:sort query="${param.query}" sort="price" order="desc" url="https://cdn.pixabay.com/photo/2012/04/28/18/55/arrow-44008_960_720.png"/>
                     </td>
                 </tr>
             </thead>
         <c:forEach var="product" items="${products}">
             <tr>
                 <td>
-                    <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+                    <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" alt="phonePhoto">
                 </td>
                 <td>
                     <a href="<c:url value="/products/${product.id}"/>">${product.description}</a>

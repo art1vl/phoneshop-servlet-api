@@ -39,6 +39,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             request.setAttribute("product", productService.getProduct(parseProductId(request)));
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp")
                     .forward(request, response);
+            
         }
         catch (NumberFormatException nfe){
             request.setAttribute("id", request.getPathInfo().substring(1));

@@ -6,33 +6,25 @@ public class SessionDosFilterStructure {
     private Long amountOfRequests;
     private Date date;
 
-    public SessionDosFilterStructure() {
+    final private Long MAX_AMOUNT_OF_REQUESTS_PER_MINUTE;
+    final private Long ONE_MINUTE = 60000L;
+
+    public SessionDosFilterStructure(Long max_amount) {
+        amountOfRequests = 0L;
+        date = new Date();
+        MAX_AMOUNT_OF_REQUESTS_PER_MINUTE = max_amount;
+    }
+
+    private void reset() {
         amountOfRequests = 0L;
         date = new Date();
     }
 
-    public Long getAmountOfRequests() {
-        return amountOfRequests;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setAountOfRequests(Long amountOfRequests) {
-        this.amountOfRequests = amountOfRequests;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void incrementLong() {
+    synchronized public boolean isAllowed() {
+        if (new Date().getTime() - date.getTime() > ONE_MINUTE) {
+            reset();
+        }
         amountOfRequests++;
-    }
-
-    public void reset() {
-        amountOfRequests = 0L;
-        date = new Date();
+        return amountOfRequests - MAX_AMOUNT_OF_REQUESTS_PER_MINUTE <= 0;
     }
 }

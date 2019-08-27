@@ -59,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             throw new IllegalArgumentException("Order can`t be null");
         }
+        stockService.changeProductsStock(order.getCartItems());
         order.setSecureId(UUID.randomUUID().toString());
         orderDao.save(order);
     }
@@ -123,11 +124,6 @@ public class OrderServiceImpl implements OrderService {
         catch(ParseException exception) {
             throw new IllegalArgumentException("Incorrect date");
         }
-
-        if(!exceptionFlag) {
-            stockService.changeProductsStock(order.getCartItems());
-        }
-
         return exceptionFlag;
     }
 
